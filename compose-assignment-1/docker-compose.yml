@@ -1,0 +1,17 @@
+version: '3.1'
+services:
+  drupal:
+    image: drupal:8-apache
+    ports:
+      - 8080:80
+    volumes:
+      - drupal_html:/var/www/html
+  postgres:
+    image: postgres:10
+    environment:
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+volumes: # specify named volumes (note these are not bind mounts)
+  postgres_data:
+  drupal_html:
