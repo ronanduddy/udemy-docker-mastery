@@ -1,1 +1,41 @@
 # create your drupal and postgres config here, based off the last assignment
+
+version: "3.7"
+services:
+# - We're going to build a custom image in this compose file for drupal service.
+#  Use Compose file from previous assignment for Drupal to start with, and we'll
+#  add to it, as well as change image name.
+# - Rename image to `custom-drupal` as we want to make a new image based on the
+#  official `drupal:8.6`.
+# - We want to build the default Dockerfile in this directory by adding `build: .`
+#  to the `drupal` service. When we add a build + image value to a compose service,
+#  it knows to use the image name to write to in our image cache, rather then pull
+#  from Docker Hub.
+  custom_drupal:
+    build:
+      context: .
+      dockerfile: drupal.Dockerfile
+    ports:
+      - 3000:80
+    volumes:
+      - drupal-modules:/var/www/html/modules
+      - drupal-profiles:/var/www/html/profiles
+      - drupal-sites:/var/www/html/sites
+      - drupal-themes:/var/www/html/themes
+
+# - For the `postgres:9.6` service, you need the same password as in previous
+#  assignment, but also add a volume for `drupal-data:/var/lib/postgresql/data` so
+#  the database will persist across Compose restarts.
+  postgres:
+    image: postgres:9.6
+    environment:
+      POSTGRES_PASSWORD: password
+    volumes:
+      - drupal-data:/var/lib/postgresql/data
+
+volumes:
+  drupal-data:
+  drupal-modules:
+  drupal-profiles:
+  drupal-sites:
+  drupal-themes:
